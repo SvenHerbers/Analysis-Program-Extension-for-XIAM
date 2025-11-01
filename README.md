@@ -4,6 +4,8 @@
 Intended use: The use of APEX is to find very first inital assignments for a rotational spectrum. If you have an experimental spectrum and a computational prediction to compare it with, you can plot them together using APEX. It is then possible to move patterns of lines by continously varying rotational constants or internal rotation barriers, which will help Identify matching groups of transitions.
 If a good matching as achived, APEX can be closed and the new parameters can be used as a refined intial guess to carry out the fitting procedure.
 
+How does it work: APEX performs repeated XIAM calls, stepping selected parameters and monitoring how line positions change as a function of these variations. From these changes, a second-order Taylor expansion is constructed and used as an analytical expression to predict line positions as the parameters move. While not exact, this approach is computationally efficient and enables instant visual feedback for the user.
+
 This README provides the required information to run APEX, along with a short tutorial based on two example datasets.
 
 ## Required Files
@@ -232,39 +234,45 @@ Pressing the mirror button will bring the predicted lines on the the negative si
 <img width="1438" height="723" alt="image" src="https://github.com/user-attachments/assets/2f9ae878-cf40-4737-bee5-b68e3172d6f0" />
 
 
-using the parameter sliders it is possible to track the changes in the spectrum. Since the spectrum is rather dense, it is difficult to match any pattern on this scale. So it is a good idea to zoom in and identify candidates which show an internal rotation pattern that matches the prediction, but shifted.
+Using the parameter sliders, it is possible to track how the spectrum responds to changes in the molecular parameters. Because the spectrum is relatively dense, recognizing patterns at the full scale can be challenging. Therefore, it is helpful to zoom in on specific regions and look for groups of lines that show the expected internal-rotation pattern, but are shifted relative to the prediction.
 
-Now the region around 4700 MHz shows some good candidates already I went ahead and highlighted a few.
+The region around 4700 MHz shows some good candidates already. I went ahead and highlighted a few.
 <img width="1063" height="531" alt="image" src="https://github.com/user-attachments/assets/81e4cafc-6633-46c7-974d-17ce37206970" />
 
 
-When you now try to alter the spectrum you will realize that some lines depend more on some parameters than others. In particular the Red and Blue lines due neither depend a lot on either V3,1 or V3,2. This is because they represent the AA species, as well as the symmetryspecies with the symmetry quantum number one up on the higher barrier rotor. Higher barrier rotors usually contribute only small splittings, which are hardly varying on a MHz scale. However, the characteristic doubling of the lines then allows for a quick identification of these pairs!
+When adjusting parameters in APEX, you will notice that some lines are more sensitive to certain parameters than others. In particular, the red and blue lines hardly depend on either V3,1 or V3,2. This is because they represent the 0,0 (AA) species, as well as the symmetry species with the symmetry quantum number one up on the higher barrier rotor 1,0. Higher torsional barriers usually result in only very small splittings, often negligible on the MHz scale. However, the characteristic line doubling makes these transitions easy to identify.
 
-Since S1 and S2 hardly depend on the barriers it makes sense to use them to fix BJ BK B- by matching the prediction to the experimental spectrum.
-Furthermore when testing BJ, you will notice that two of the S1 S2 pairs hardly depend on it. it is then possible to adjust BK and B- to match the two positions of the two pairs.
+Because the S1 and S2 species depend only weakly on the torsional barriers, they are ideal for determining the rotational constants BJ, BK, and B- by matching the predicted and experimental line positions. When adjusting BJ, you will observe that two of the S1/S2 line pairs change very little with this parameter. This makes it possible to fix BK and B- by aligning the positions of these two pairs.
 
 <img width="1095" height="536" alt="image" src="https://github.com/user-attachments/assets/279fb184-8623-4240-97da-3add9f285468" />
 
-If you found it hard to find this match, do not worry. It looks easier than it is and typically takes quite some time to find the matches! Afterall, we are looking at a very dense spectrum and scanning through a 5 Dimensional parameter space.
-Since BK, and B- are somewhat locked now, next is BJ.
-Next is then V1n of the lower barrier rotor, to position S3,S4,S5 and then a little fine tuning of all parameters can be carried out.
-A satisfying result then looks like this:
+If you found it difficult to identify this match, don’t worry — it is challenging. It always looks easier in hindsight. Typically, matching patterns takes time, especially since we are dealing with a dense spectrum and effectively scanning a five-dimensional parameter space.
+
+Now that BK and B- are approximately fixed, the next parameter to determine is BJ.
+
+Once BJ is adjusted, the next step is to optimize V1n of the lower-barrier rotor, which shifts the S3, S4, and S5 torsional species into place. After that, a bit of fine-tuning of all parameters can be performed to improve the overall agreement.
+
+A satisfying result should then look something like this:
+
 <img width="1417" height="723" alt="image" src="https://github.com/user-attachments/assets/7f3d67a6-b08a-4344-9e2b-017d9b25dcab" />
 
-We can see some remaining deviations, which is fine, since the 2nd orde taylor will work worse the further we are from the intial guess. But also, we stopped fine tuning at some point. Perhaps it is still possible to get quite a better match. Definetly when feeding in the found parameters in a new guess, however, we have plenty of possible inital assignments to carry out our regular sequential fitting and the work of APEX is done.
+We can still observe some deviations, which is expected. The second-order Taylor expansion becomes less accurate the further we move away from the initial parameter guess, and we also stopped fine-tuning at some point. It is certainly possible to achieve an even better match — especially once the parameters found here are used as a new starting point in a proper fit. However, at this stage we already have multiple plausible initial assignments, which is sufficient to proceed with the regular sequential fitting. In other words: **APEX has done its job**.
 
 #### Step 4 - Close Plot and Open Output File
-There is no dedicated "create output" button. Instead close, the plot and then the python script will terminate normally.
-Before termination in a last step `APEX.py` will create a file `APEX_output.txt` which will contain the last slider values. 
+There is no dedicated “create output” button. Instead, simply close the plot window. When the window is closed, the Python script terminates normally, and as a final step `APEX.py` automatically generates a file called `APEX_output.txt`, which contains the last slider values used during the session.
+
 <img width="667" height="141" alt="image" src="https://github.com/user-attachments/assets/d638b051-5e18-4794-bf70-ab4ed0a3b51f" />
 
-Example 1 is then finished, the job of APEX is done and a refined inital prediction file is obtained when copying the output values into the `Input.xi` and run it through XIAMi2NQ.
+Example 1 is now complete. APEX has fulfilled its purpose, and a refined initial prediction file is obtained by copying the output values into `Input.xi` and running it again with XIAMi2NQ.
 
 ### Example 2 - Single High Barrier Rotor with Two Quadrupolar Nuclei (Methoxyflurane)
-Example 2 now shows the case of the most abundant isotopologue of the more abundant conformer of Methoxyflurane. Since we have only a single rotor, which has a rather high barrier, we will include it in the prediction but not include it as a seperate slider this time. We will also not plot the two symmetry seperatly but rather use only the total plot. 
 
-This time we will plot against a complete experimental spectrum. Also it should be noted, that for two nearly equivalent quadrupolar nuclei, XIAM2NQ hyperfine intensities will be quite bad. XIAM2NQ uses an exact treatment in fitting of quadrupole components. However, for intensities, approximations are in place that only work when J is a nearly good quantum number (still fairly accurate for the Chlorine nuclei in Methoxyflurane) and if chi_1 >> chi_2 the quadrupole coupling of the first nucleus is mutch larger than for the second and F1 is also a nearly good quantum number. 
-This means we expect quite some deviations in intensities, and things might not be as obvious as in our synthetic case.
+Example 2 demonstrates the case of the most abundant isotopologue of the dominant conformer of Methoxyflurane. Since this molecule contains only a single internal rotor with a relatively high barrier, we will include the rotor in the prediction, but we will not provide a separate slider for it. We will also not plot the symmetry species separately; instead, we will only use the total spectrum plot.
+
+In this example, we will compare directly against a complete experimental spectrum. It should be noted that for molecules with two nearly equivalent quadrupolar nuclei, XIAM2NQ does not produce highly accurate hyperfine intensities. XIAM2NQ performs an exact treatment of quadrupole splittings during fitting, but intensities are computed using approximations that assume (i) J remains a nearly good quantum number (which is still reasonably valid for the chlorine nuclei in Methoxyflurane) and (ii) χ₁ >> χ₂, meaning the quadrupole coupling of one nucleus is much larger than that of the second, so F₁ remains a nearly good quantum number.
+
+As a result, we expect noticeable deviations in the predicted hyperfine intensities, and the matching process may be less obvious than in the synthetic example.
+
 
 #### Step 1 - Input File
 ```
@@ -315,8 +323,7 @@ This means we expect quite some deviations in intensities, and things might not 
 
 J 10
 ```
-
-Everything is quite similar to Example 1, except there is only one rotor and quadrupole coupling terms show up. Quadrupole coupling terms will be included as fixed parameters in the predictions. The Frequency range is now 2GHz to 8 GHz, a complete broadband spectrum.
+Everything works similarly to Example 1, except that there is only one internal rotor and quadrupole coupling terms are now present. The quadrupole coupling constants are included as fixed parameters in the prediction and are not controlled by sliders. The frequency range is set from 2 GHz to 8 GHz, covering the full broadband experimental spectrum.
 
 #### Step 2 - APEX Input
 ```
@@ -344,29 +351,33 @@ link_v          = 0          # link torsional potentials v3_1 and v3_2 (requires
 #== End of Input, Starting Computation ==
 #========================================
 ```
-Changes compared to Example1: 
-the experimental data is comma separated and has a header of 15 lines, which was passed as arguments to `np.loadtxt`
-Increased range for B- from 2.5 to 5
-`freqlow` set to 2GHz
-`freqhigh` set to 8 GHz
-`binsize` increased to 2 MHz - good enough for inital pattern matching 
-`nrot = 0`, we do not need a slider for the higher barrier rotor.
-`speciesplot = [1,0,0,0,0,0]` - only the sum spectrum will be shown, not the seperate symmetry species
+Changes compared to Example 1:
+
+- The experimental data is comma-separated and contains a 15-line header, which is handled using the `skiprows` and `delimiter` arguments in `np.loadtxt`.
+- The range of the slider for **B-** was increased from 2.5 to 5.
+- `freqlow` is set to **2 GHz**.
+- `freqhigh` is set to **8 GHz** to cover the full broadband spectrum.
+- `binsize` is increased to **2 MHz**, which is sufficient for initial pattern matching.
+- `nrot = 0` because we do not need a slider for the high-barrier rotor.
+- `speciesplot = [1,0,0,0,0,0]` so only the total (summed) spectrum is plotted, not the individual symmetry species.
 
 #### Step 3 - Run APEX.py
-Running APEX on this molecule takes a few minutes, since quadrupole coupling makes things way more expensive.
-However, as soon as the computation is completed, the sliders will work smoothly again!
+Running APEX on this molecule may take a few minutes, since the inclusion of quadrupole coupling makes the calculations significantly more expensive. However, once the initial computation is finished, the sliders will respond smoothly again.
 
 <img width="1435" height="735" alt="image" src="https://github.com/user-attachments/assets/026fd8b0-714a-48fe-832b-50a987f23345" />
 
-Since we did not include the barrier as slider by setting `nrot` to 0 (while it remains 1 in Input.xi) there will be only 3 sliders available for BJ, BK, B- 
-Feel free to try out to find a good match! Since there are multiple molecules contributing to the spectrum perhaps you will find a different component than anticipated.
-The solutions for this example can be found in the XIAMi2NQ repository within in the accepted manuscript, which I uploaded there.
+Since we did not include the barrier as a slider by setting `nrot` to 0 (while it remains 1 in `Input.xi`), only three sliders will be available: BJ, BK, and B-. 
+
+Feel free to try to find a good match! Since multiple molecules contribute to the spectrum, you may even identify a different component than initially expected.
+
+The solution for this example can be found in the XIAMi2NQ repository, included in the accepted manuscript that I uploaded there.
+
 [https://github.com/SvenHerbers/XIAM-2NQ](https://github.com/SvenHerbers/XIAM-2NQ)
 
 #### Setp 4 - Close Plot and Open Output File
 
-The results will then be available again in `APEX_output.txt`.
+The results will again be written to `APEX_output.txt`.
+
 
 # Citation
 If you use **APEX** in a publication or presentation, please cite this repository and/or the following ISMS conference abstract:
