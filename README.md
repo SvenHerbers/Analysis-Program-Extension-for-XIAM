@@ -14,7 +14,7 @@ All of the following files must be located in the **same folder**:
 
 | File | Description |
 |------|-------------|
-| Experimental spectrum file (e.g., `Spectrum.txt`) | Two-column text file: frequency (MHz), intensity (arb. units); plotted in the background. |
+| Experimental spectrum file (e.g., `Spectrum.txt`) | Two-column text file: frequency (MHz), intensity (arb. units); plotted in the background. Can be either linelist with intensities, or complete spectrum. |
 | `Input.xi` | XIAM input file used by `xiam2nq`. |
 | `APEX.py` | Main program — run this file to start APEX. |
 | `Taylor_Module.py` | Contains helper functions used by `APEX.py`. |
