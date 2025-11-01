@@ -17,7 +17,7 @@ All of the following files must be located in the **same folder**:
 | Experimental spectrum file (e.g., `Spectrum.txt`) |Two-column text file containing frequency (MHz) and intensity (arb. units); plotted as the experimental background. Can be either a linelist with intensities or a full experimental spectrum.|
 | `Input.xi` | XIAM input file used by `xiam2nq`. |
 | `APEX.py` | Main program — run this file to start APEX. |
-| `Taylor_Module.py` | Contains helper functions used by `APEX.py`. |
+| `Taylor_Module.py` | Contains functions used by `APEX.py`. |
 | `XIAMi2NQ.exe` | XIAM2NQ compiled with an intel fortran compiler, available on  [https://github.com/SvenHerbers/XIAM-2NQ](https://github.com/SvenHerbers/XIAM-2NQ)|
 
 ## Documentation and How-to-use
