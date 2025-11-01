@@ -105,7 +105,7 @@ The parameters have the following meaning
 
   Example function to compute `qsum` (σ = 1 for C₁ / Cₛ symmetry):
 
-  ```python
+```python
 import numpy as np
 import scipy.constants as const
 def calc_qr(A,B,C,sigma,T):
@@ -115,7 +115,7 @@ def calc_qr(A,B,C,sigma,T):
     C=C*10**6*const.Planck/const.k
     qr=(np.pi**(1/2)/sigma) * np.sqrt((T**3/(A*B*C)))
     return qr
-  ```
+```
 
 - APEX requires the spectrum to be calculated using `int 2`.  
   **No other intensity mode is supported.**
