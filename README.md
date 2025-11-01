@@ -22,8 +22,9 @@ All of the following files must be located in the **same folder**:
 
 
 
-### Example 1 - Synthetic two Rotor case
+### Example 1 - Synthetic Two Rotor Case
 
+Example 1 represents a two rotor case as simulated by XIAM. I added some offset in the inital prediction and errors to partition function/ dipolemoments to add some descrepancies. 
 Several steps have to be followed to get APEX running. 
 
 #### Step 1 - Set up Input.xi
@@ -195,7 +196,7 @@ figureaspects   = (16,8)     # Change the intial plotsize to match your screen s
 Variable_choice = 1          # slider parameters: 0 = A,B,C ; 1 = BJ,BK,B− (Ir assumption)
 Arange          = 30.0       # slider range for A or BJ (MHz)
 Brange          = 30.0       # slider range for B or BK (MHz)
-Crange          = 10.0        # slider range for C or B− (MHz)
+Crange          = 2.5        # slider range for C or B− (MHz)
 v1range         = 30.0       # torsional barrier range V1 (cm^-1)
 v2range         = 30.0       # torsional barrier range V2 (cm^-1)
 v3range         = 30.0       # torsional barrier range V3 (cm^-1)
@@ -219,6 +220,47 @@ It is up to the user, how to load experiment as a 2D array into the program. I u
 `link_v` is 0 for non-equivalent rotors, and 1 for two equivalent rotors. If set to 1, both barriers should be defined in one line in `Input.xi` (e.g. `V1n 1162.94423 1162.94423`)
 
 #### Step 3 - Run APEX.py
+The user interface opens showing the various species plots (here 5 different symmetry species are shown) 
+color identifications are S1:blue S2:red S3:orange S4:purple S5:green.
+Moving the amplitude slider alters the intensity of the prediction with respect to the experimental spectrum.
+The usual zoom capabilites of matplotlib.pyplot are available.
+Pressing the "Reset" button, brings you back to exactly the starting point (with sliders centered)
+Pressing the mirror button will bring the predicted lines on the the negative side of the plot 
+
+<img width="1436" height="735" alt="image" src="https://github.com/user-attachments/assets/1174778e-3f33-44c0-928e-8e834d9b374d" />
+
+<img width="1438" height="723" alt="image" src="https://github.com/user-attachments/assets/2f9ae878-cf40-4737-bee5-b68e3172d6f0" />
+
+
+using the parameter sliders it is possible to track the changes in the spectrum. Since the spectrum is rather dense, it is difficult to match any pattern on this scale. So it is a good idea to zoom in and identify candidates which show an internal rotation pattern that matches the prediction, but shifted.
+
+Now the region around 4700 MHz shows some good candidates already I went ahead and highlighted a few.
+<img width="1063" height="531" alt="image" src="https://github.com/user-attachments/assets/81e4cafc-6633-46c7-974d-17ce37206970" />
+
+
+When you now try to alter the spectrum you will realize that some lines depend more on some parameters than others. In particular the Red and Blue lines due neither depend a lot on either V3,1 or V3,2. This is because they represent the AA species, as well as the symmetryspecies with the symmetry quantum number one up on the higher barrier rotor. Higher barrier rotors usually contribute only small splittings, which are hardly varying on a MHz scale. However, the characteristic doubling of the lines then allows for a quick identification of these pairs!
+
+Since S1 and S2 hardly depend on the barriers it makes sense to use them to fix BJ BK B- by matching the prediction to the experimental spectrum.
+Furthermore when testing BJ, you will notice that two of the S1 S2 pairs hardly depend on it. it is then possible to adjust BK and B- to match the two positions of the two pairs.
+
+<img width="1095" height="536" alt="image" src="https://github.com/user-attachments/assets/279fb184-8623-4240-97da-3add9f285468" />
+
+If you found it hard to find this match, do not worry. It looks easier than it is and typically takes quite some time to find the matches! Afterall, we are looking at a very dense spectrum and scanning through a 5 Dimensional parameter space.
+Since BK, and B- are somewhat locked now, next is BJ.
+Next is then V1n of the lower barrier rotor, to position S3,S4,S5 and then a little fine tuning of all parameters can be carried out.
+A satisfying result then looks like this:
+<img width="1417" height="723" alt="image" src="https://github.com/user-attachments/assets/7f3d67a6-b08a-4344-9e2b-017d9b25dcab" />
+
+We can see some remaining deviations, which is fine, since the 2nd orde taylor will work worse the further we are from the intial guess. But also, we stopped fine tuning at some point. Perhaps it is still possible to get quite a better match. Definetly when feeding in the found parameters in a new guess, however, we have plenty of possible inital assignments to carry out our regular sequential fitting and the work of APEX is done.
+
+#### Step 4 - Close Plot and Open Output File
+There is no dedicated "create output" button. Instead close, the plot and then the python script will terminate normally.
+Before termination in a last step `APEX.py` will create a file `APEX_output.txt` which will contain the last slider values. 
+<img width="667" height="141" alt="image" src="https://github.com/user-attachments/assets/d638b051-5e18-4794-bf70-ab4ed0a3b51f" />
+
+Example 1 is then finished, the job of APEX is done and a refined inital prediction file is obtained when copying the output values into the `Input.xi` and run it through XIAMi2NQ.
+
+
 
 # Citation
 If you use **APEX** in a publication or presentation, please cite this repository and/or the following ISMS conference abstract:
